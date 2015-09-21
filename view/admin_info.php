@@ -5,7 +5,7 @@
 if (!empty($info) && is_array($info))
 {
 ?>
-<p>User <strong><?php $info['username']; ?></strong>:</p>
+<p>User <strong><?php echo $info['username']; ?></strong>:</p>
 <table class="table table-bordered table-striped">
 <thead>
    <tr>
@@ -89,7 +89,7 @@ echo "<tr><td>".$address."</td></tr>\n";
                <td>'.abs($transaction['amount']).'</td>
                <td>'.$transaction['fee'].'</td>
                <td>'.$transaction['confirmations'].'</td>
-               <td><a href="' . sprintf($blockchain_url, $transaction['txid']) . '" target="_blank">Info</a></td>
+               <td><a href="' . $blockchain_url, $transaction['txid'] . '" target="_blank">Info</a></td>
             </tr>';
    }
    ?>

@@ -141,6 +141,23 @@ if (!empty($_SESSION['user_session']))
                session_destroy();
                header("Location: index.php");
                break;
+	    case "support":
+	 $error['message'] = "Please contact support via email at $support";
+                echo "Support Key: ";
+                echo $_SESSION['user_supportpin'];
+                break;
+case "authgen":
+$user = new User($mysqli);
+$secret = $user->createSecret();
+$gen=$user->enableauth();
+echo $gen;
+break;
+
+case "disauth":
+$user = new User($mysqli);
+$disauth=$user->disauth();
+echo $disauth;
+break;
          }
       }
       $addressList = $client->getAddressList($user_session);
@@ -152,6 +169,7 @@ if (!empty($_SESSION['user_session']))
       $user = new User($mysqli);
       switch ($admin_action)
       {
+
          case "info":
             if (!empty($_GET['i']))
             {
@@ -305,7 +323,7 @@ if (!empty($_SESSION['user_session']))
       switch ($_POST['action'])
       {
          case "login":
-            $result = $user->logIn($_POST['username'], $_POST['password']);
+            $result = $user->logIn($_POST['username'], $_POST['password'], $_POST['auth']);
             if (!is_array($result))
             {
                $error['type'] = "login";
@@ -313,6 +331,8 @@ if (!empty($_SESSION['user_session']))
             } else {
                $_SESSION['user_session'] = $result['username'];
                $_SESSION['user_admin'] = $result['admin'];
+	       $_SESSION['user_supportpin'] = $result['supportpin'];
+	       $_SESSION['user_id'] = $result['id'];
                header("Location: index.php");
             }
             break;
@@ -325,6 +345,7 @@ if (!empty($_SESSION['user_session']))
             } else {
                $username   = $mysqli->real_escape_string(   strip_tags(          $_POST['username']   ));
                $_SESSION['user_session'] = $username;
+              $_SESSION['user_supportpin'] = "Please relogin for Support Key";
                header("Location: index.php");
             }
             break;

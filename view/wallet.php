@@ -5,20 +5,43 @@ if (!empty($error))
     echo "<p style='font-weight: bold; color: red;'>" . $error['message']; "</p>";
 }
 ?>
-<p>Logged in as: <strong><?php echo $user_session; ?></strong></p>
+<p>Hello, <strong><?php echo $user_session; ?></strong>! <?php if ($admin) {?><strong><font color="red">[Admin]</font><?php }?></strong></p>
 <p>Current balance: <strong id="balance"><?php echo satoshitize($balance); ?></strong> <?=$short?></p>
+
 <form action="index.php" method="POST">
-	<input type="hidden" name="action" value="logout" />
-	<button type="submit" class="btn btn-default">Log out</button>
-</form>
+
 <?php
 if ($admin)
 {
   ?>
-  <a href="?a=home" class="btn btn-default">Go to admin home</a>
+<h4>Admin Links:</h4>
+  <a href="?a=home" class="btn btn-default">Admin Dashboard</a>
+<h4>User Links:</h4>
   <?php
 }
 ?>
+<form>
+        <input type="hidden" name="action" value="logout" />
+        <button type="submit" class="btn btn-default">Logout</button>
+</form>
+<form action="index.php" method="POST">
+<input type="hidden" name="action" value="support" action="index.php"/>
+<button type="submit" class="btn btn-default">Support</button>
+</form>
+
+<form action="index.php" method="POST">
+<form>
+<input type="hidden" name="action" value="authgen" />
+<button type="submit" class="btn btn-default">Enable 2 Factor Auth</button>
+</form><p>
+<form action="index.php" method="post">
+<form>
+<input type="hidden" name="action" value="disauth" />
+<button type="submit" class="btn btn-default">Disable 2 Factor Auth</button>
+</form>
+
+<br>
+
 <br />
 <p>Update your password:</p>
 <form action="index.php" method="POST" class="clearfix" id="pwdform">
@@ -54,13 +77,17 @@ if ($admin)
 <thead>
 <tr>
 <td>Address:</td>
+<td>QR Code</td>
 </tr>
 </thead>
 <tbody>
 <?php
 foreach ($addressList as $address)
 {
-echo "<tr><td>".$address."</td></tr>\n";
+echo "<tr><td>".$address."</t>";?>
+<td><a href="http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=<?php echo $address?>">
+  <img src="http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=<?php echo $address?>" alt="QR Code" style="width:42px;height:42px;border:0;"></td><tr>
+<?php
 }
 ?>
 </tbody>
@@ -90,7 +117,7 @@ echo "<tr><td>".$address."</td></tr>\n";
                <td>'.abs($transaction['amount']).'</td>
                <td>'.$transaction['fee'].'</td>
                <td>'.$transaction['confirmations'].'</td>
-               <td><a href="' . sprintf($blockchain_url,  $transaction['txid']) . '" target="_blank">Info</a></td>
+               <td><a href="' . $blockchain_url,  $transaction['txid'] . '" target="_blank">Info</a></td>
             </tr>';
    }
    ?>
@@ -104,7 +131,7 @@ $("#pwdform input[name='action']").first().attr("name", "jsaction");
 $("#donate").click(function (e){
   $("#donateinfo").show();
   $("#withdrawform input[name='address']").val("<?=$donation_address?>");
-  $("#withdrawform input[name='amount']").val("5.00");
+  $("#withdrawform input[name='amount']").val("0.01");
 });
 $("#withdrawform").submit(function(e)
 {
